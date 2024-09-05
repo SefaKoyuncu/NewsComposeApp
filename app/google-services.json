@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "234961899445",
+    "project_id": "newsapp-c430b",
+    "storage_bucket": "newsapp-c430b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:234961899445:android:e888499a073d8e7d9613fc",
+        "android_client_info": {
+          "package_name": "com.sefa.newsapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDYYXcrQ1rAKSSUvYxJ5yodMlBj8JKpc44"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

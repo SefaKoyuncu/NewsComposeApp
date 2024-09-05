@@ -1,4 +1,4 @@
-package com.sefa.newsapp.ui.theme
+package com.sefa.newsapp.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 

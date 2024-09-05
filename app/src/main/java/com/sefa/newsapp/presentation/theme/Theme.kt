@@ -1,4 +1,4 @@
-package com.sefa.newsapp.ui.theme
+package com.sefa.newsapp.presentation.theme
 
 import android.app.Activity
 import android.os.Build
@@ -24,8 +24,8 @@ private val DarkColorScheme = darkColorScheme(
 
 private val LightColorScheme = lightColorScheme(
     primary = Color.Black,
-    secondary = Color.Gray,
-    tertiary = Color.LightGray
+    secondary = Color.Black,
+    tertiary = Color.Black
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
