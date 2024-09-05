@@ -18,6 +18,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 fun BottomNavigationBar(navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
+    val currentRoute = navBackStackEntry?.destination?.route
 
     NavigationBar(
         containerColor = Color.White,
@@ -25,19 +26,19 @@ fun BottomNavigationBar(navController: NavHostController) {
     ) {
         NavigationBarItem(
             icon = { Icon(imageVector = Icons.Filled.Home, contentDescription = "Home") },
-            label = { Text("Home") },
+            label = { if (currentRoute == "main") Text("Home") },
             selected = currentDestination?.route == "main",
             onClick = { navController.navigate("main") }
         )
         NavigationBarItem(
             icon = { Icon(imageVector = Icons.Filled.Favorite, contentDescription = "Favorites") },
-            label = { Text("Favorites") },
+            label = { if (currentRoute == "fav") Text("Favorites") },
             selected = currentDestination?.route == "fav",
             onClick = { navController.navigate("fav") }
         )
         NavigationBarItem(
             icon = { Icon(imageVector = Icons.Filled.Settings, contentDescription = "Settings") },
-            label = { Text("Settings") },
+            label = { if (currentRoute == "settings") Text("Settings") },
             selected = currentDestination?.route == "settings",
             onClick = { navController.navigate("settings") }
         )
