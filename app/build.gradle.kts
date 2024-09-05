@@ -4,6 +4,9 @@ plugins {
     alias(libs.plugins.kotlin.ksp)
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.google.services)
+    alias(libs.plugins.safeargs)
+    alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -110,4 +113,6 @@ dependencies {
     implementation(libs.datastore.preferences)
 
     implementation(libs.androidx.navigation.compose)
+
+    implementation(libs.kotlinx.serialization.json)
 }
