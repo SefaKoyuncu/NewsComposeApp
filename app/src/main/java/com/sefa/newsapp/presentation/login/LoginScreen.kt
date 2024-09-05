@@ -1,7 +1,6 @@
-import android.os.Bundle
+package com.sefa.newsapp.presentation.login
+
 import android.widget.Toast
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,7 +15,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -34,26 +32,10 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.util.PatternsCompat
 import androidx.navigation.NavController
-import com.sefa.newsapp.ui.AppNavigation
-import com.sefa.newsapp.ui.theme.NewsComposeAppTheme
-
-class LoginActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            NewsComposeAppTheme {
-                Surface(modifier = Modifier.fillMaxSize()) {
-                   AppNavigation()
-                }
-            }
-        }
-    }
-}
 
 @Composable
 fun LoginScreen(navController: NavController) {
@@ -160,13 +142,13 @@ fun LoginScreen(navController: NavController) {
             )
             Text(
                 text ="Remember Me",
-                style = MaterialTheme.typography.titleSmall
+                style = MaterialTheme.typography.labelLarge
             )
             Spacer(modifier = Modifier.weight(1f))
 
             // Forgot Password Button
             TextButton(
-                onClick = { /* Forgot Password Logic */ }
+                onClick = { navController.navigate("forgot") }, // Navigate to SignUpScreen
             ) {
                 Text(text = "Forgot Password", color = Color.Gray, style = MaterialTheme.typography.labelLarge)
             }
@@ -181,6 +163,8 @@ fun LoginScreen(navController: NavController) {
                     Toast.makeText(context, "Your password must be at least 8 characters.", Toast.LENGTH_SHORT).show()
                 } else {
                     // Login Logic
+                    navController.navigate("main")
+                    //navController.popBackStack()
                 }
             },
             modifier = Modifier
@@ -206,12 +190,4 @@ fun LoginScreen(navController: NavController) {
 
 fun isValidEmail(email: String): Boolean {
     return PatternsCompat.EMAIL_ADDRESS.matcher(email).matches()
-}
-
-@Preview(showBackground = true)
-@Composable
-fun LoginScreenPreview() {
-    NewsComposeAppTheme {
-        AppNavigation()
-    }
 }

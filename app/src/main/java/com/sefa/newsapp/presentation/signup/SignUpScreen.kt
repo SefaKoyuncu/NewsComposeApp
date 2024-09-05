@@ -1,4 +1,4 @@
-package com.sefa.newsapp
+package com.sefa.newsapp.presentation.signup
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
@@ -31,10 +31,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.util.PatternsCompat
-import com.sefa.newsapp.ui.theme.NewsComposeAppTheme
+import androidx.navigation.NavController
+import com.sefa.newsapp.R
+import com.sefa.newsapp.presentation.theme.NewsComposeAppTheme
 
 @Composable
-fun SignUpScreen() {
+fun SignUpScreen(navController: NavController) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordAgain by remember { mutableStateOf("") }
@@ -67,7 +69,7 @@ fun SignUpScreen() {
             value = email,
             onValueChange = {
                 email = it
-                emailError = !isValidEmail(email)
+                emailError = !com.sefa.newsapp.presentation.login.isValidEmail(email)
             },
             label = { Text(text ="Email", style = MaterialTheme.typography.labelLarge) },
             isError = emailError,
@@ -167,7 +169,7 @@ fun SignUpScreen() {
         // Login Button
         Button(
             onClick = {
-                if (!isValidEmail(email)) {
+                if (!com.sefa.newsapp.presentation.login.isValidEmail(email)) {
                     Toast.makeText(context, "Enter a valid email.", Toast.LENGTH_SHORT).show()
                 } else if (passwordError || passwordAgainError) {
                     Toast.makeText(context, "Your password must be at least 8 characters.", Toast.LENGTH_SHORT).show()
@@ -176,6 +178,7 @@ fun SignUpScreen() {
                 }
                 else {
                     // Login Logic
+                    navController.navigate("main")
                 }
             },
             modifier = Modifier
@@ -186,16 +189,3 @@ fun SignUpScreen() {
         }
     }
 }
-
-fun isValidEmail(email: String): Boolean {
-    return PatternsCompat.EMAIL_ADDRESS.matcher(email).matches()
-}
-
-@Preview(showBackground = true)
-@Composable
-fun SignUpScreenPreview() {
-    NewsComposeAppTheme {
-        SignUpScreen()
-    }
-}
-
