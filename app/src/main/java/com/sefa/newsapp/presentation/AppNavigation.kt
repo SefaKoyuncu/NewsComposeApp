@@ -1,9 +1,10 @@
 package com.sefa.newsapp.presentation
 
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -12,15 +13,13 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.sefa.newsapp.data.model.News
 import com.sefa.newsapp.presentation.details.NewsDetailsScreen
+import com.sefa.newsapp.presentation.fav.FavScreen
 import com.sefa.newsapp.presentation.forgot.ForgotPasswordScreen
 import com.sefa.newsapp.presentation.login.LoginScreen
 import com.sefa.newsapp.presentation.main.NewsScreen
 import com.sefa.newsapp.presentation.settings.SettingsScreen
 import com.sefa.newsapp.presentation.signup.SignUpScreen
 import kotlinx.serialization.json.Json
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
-import com.sefa.newsapp.presentation.fav.FavScreen
 
 @Composable
 fun AppNavigation() {

@@ -29,6 +29,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.sefa.newsapp.data.model.Media
@@ -140,12 +141,33 @@ fun FavScreen(navController: NavController) {
             ),
         )
 
+    Column(modifier = Modifier.fillMaxSize()) {
+        // Başlık bölümü
+        Text(
+            text = "Favorites News",
+            fontSize = 30.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .padding(bottom = 8.dp)
+                .padding(top = 8.dp)
+                .align(Alignment.CenterHorizontally),
+            style = MaterialTheme.typography.displayMedium
+        )
+
         LazyColumn(
             modifier = Modifier.fillMaxSize()) {
             items(news) { newsItem ->
                 NewsCard(newsItem = newsItem, navController = navController)
             }
         }
+    }
+
+      /*  LazyColumn(
+            modifier = Modifier.fillMaxSize()) {
+            items(news) { newsItem ->
+                NewsCard(newsItem = newsItem, navController = navController)
+            }
+        }*/
 }
 
 @Composable
