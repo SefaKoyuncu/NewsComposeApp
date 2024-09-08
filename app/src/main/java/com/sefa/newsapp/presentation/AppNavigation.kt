@@ -11,7 +11,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.sefa.newsapp.data.model.News
+import com.sefa.newsapp.domain.model.NewsUIModel
 import com.sefa.newsapp.presentation.details.NewsDetailsScreen
 import com.sefa.newsapp.presentation.fav.FavScreen
 import com.sefa.newsapp.presentation.forgot.ForgotPasswordScreen
@@ -51,7 +51,7 @@ fun AppNavigation() {
                 arguments = listOf(navArgument("newsJson") { type = NavType.StringType })
             ) { backStackEntry ->
                 val newsJson = backStackEntry.arguments?.getString("newsJson")
-                val news = newsJson?.let { Json.decodeFromString(News.serializer(), it) }
+                val news = newsJson?.let { Json.decodeFromString(NewsUIModel.serializer(), it) }
                 news?.let { NewsDetailsScreen(it, navController) }
             }
             composable("settings") { SettingsScreen() }

@@ -163,7 +163,10 @@ fun LoginScreen(navController: NavController) {
         // Login Button
         Button(
             onClick = {
-                if (!isValidEmail(email)) {
+
+                navController.navigate("main")
+
+              /*  if (!isValidEmail(email)) {
                     Toast.makeText(context, "Enter a valid email.", Toast.LENGTH_SHORT).show()
                 } else if (passwordError) {
                     Toast.makeText(context, "Your password must be at least 8 characters.", Toast.LENGTH_SHORT).show()
@@ -171,7 +174,7 @@ fun LoginScreen(navController: NavController) {
                     // Login Logic
                     navController.navigate("main")
                     //navController.popBackStack()
-                }
+                }*/
             },
             modifier = Modifier
                 .fillMaxWidth()
