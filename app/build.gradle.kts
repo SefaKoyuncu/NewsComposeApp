@@ -96,6 +96,7 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.retrofit.gson)
     implementation(libs.okhttp)
+    implementation(libs.okhttp.logging)
 
     // Room
     implementation(libs.room.runtime)
@@ -105,6 +106,8 @@ dependencies {
     // Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
+    implementation(libs.hilt.navigation.compose)
+
 
     // Coil
     implementation(libs.coil.compose)

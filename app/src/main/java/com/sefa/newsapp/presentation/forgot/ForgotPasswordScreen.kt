@@ -3,6 +3,7 @@ package com.sefa.newsapp.presentation.forgot
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -42,6 +43,10 @@ fun ForgotPasswordScreen() {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
+        // İçeriği ortalamak için Spacer
+        Spacer(modifier = Modifier.weight(1f))
+
         // Title
         Text(
             text = "Forgot Password",
@@ -94,6 +99,18 @@ fun ForgotPasswordScreen() {
         ) {
             Text(text = "Reset Password", style = MaterialTheme.typography.headlineSmall)
         }
+
+        // İçeriği ortalamak için Spacer
+        Spacer(modifier = Modifier.weight(1f))
+
+        // NYTNews
+        Text(
+            text = "NYTNews",
+            fontSize = 18.sp,
+            fontWeight = FontWeight.ExtraBold,
+            style = MaterialTheme.typography.displayMedium,
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        )
     }
 }
 

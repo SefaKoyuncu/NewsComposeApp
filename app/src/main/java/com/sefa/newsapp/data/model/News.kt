@@ -11,8 +11,8 @@ data class News (
 
   @SerializedName("uri"            ) var uri           : String?           = null,
   @SerializedName("url"            ) var url           : String?           = null,
-  @SerializedName("id"             ) var id            : Int?              = null,
-  @SerializedName("asset_id"       ) var assetId       : Int?              = null,
+  @SerializedName("id"             ) var id            : Long?              = null,
+  @SerializedName("asset_id"       ) var assetId       : Long?              = null,
   @SerializedName("source"         ) var source        : String?           = null,
   @SerializedName("published_date" ) var publishedDate : String?           = null,
   @SerializedName("updated"        ) var updated       : String?           = null,

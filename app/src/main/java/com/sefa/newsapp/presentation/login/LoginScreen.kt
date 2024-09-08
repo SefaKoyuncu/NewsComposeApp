@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -55,6 +57,10 @@ fun LoginScreen(navController: NavController) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
+        // İçeriği ortalamak için Spacer
+        Spacer(modifier = Modifier.weight(1f))
+
         // Title
         Text(
             text = "Login",
@@ -157,7 +163,10 @@ fun LoginScreen(navController: NavController) {
         // Login Button
         Button(
             onClick = {
-                if (!isValidEmail(email)) {
+
+                navController.navigate("main")
+
+              /*  if (!isValidEmail(email)) {
                     Toast.makeText(context, "Enter a valid email.", Toast.LENGTH_SHORT).show()
                 } else if (passwordError) {
                     Toast.makeText(context, "Your password must be at least 8 characters.", Toast.LENGTH_SHORT).show()
@@ -165,7 +174,7 @@ fun LoginScreen(navController: NavController) {
                     // Login Logic
                     navController.navigate("main")
                     //navController.popBackStack()
-                }
+                }*/
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -185,6 +194,19 @@ fun LoginScreen(navController: NavController) {
                 textDecoration = TextDecoration.Underline,
                 style = MaterialTheme.typography.labelLarge)
         }
+
+        // Spacer eklendi
+        Spacer(modifier = Modifier.weight(1f)) // Geri kalan boş alanı doldurur ve alttaki metni en alta iter
+
+
+        // NYTNews
+        Text(
+            text = "NYTNews",
+            fontSize = 18.sp,
+            fontWeight = FontWeight.ExtraBold,
+            style = MaterialTheme.typography.displayMedium,
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        )
     }
 }
 

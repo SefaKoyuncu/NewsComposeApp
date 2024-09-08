@@ -3,6 +3,7 @@ package com.sefa.newsapp.presentation.signup
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -55,6 +56,10 @@ fun SignUpScreen(navController: NavController) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
+        // İçeriği ortalamak için Spacer
+        Spacer(modifier = Modifier.weight(1f))
+
         // Title
         Text(
             text = "Sign Up",
@@ -187,5 +192,18 @@ fun SignUpScreen(navController: NavController) {
         ) {
             Text(text = "Save And Log In", style = MaterialTheme.typography.headlineSmall)
         }
+
+        // Spacer eklendi
+        Spacer(modifier = Modifier.weight(1f)) // Geri kalan boş alanı doldurur ve alttaki metni en alta iter
+
+
+        // NYTNews
+        Text(
+            text = "NYTNews",
+            fontSize = 18.sp,
+            fontWeight = FontWeight.ExtraBold,
+            style = MaterialTheme.typography.displayMedium,
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        )
     }
 }
