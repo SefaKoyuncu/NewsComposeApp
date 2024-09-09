@@ -1,0 +1,53 @@
+package com.sefa.newsapp.presentation.details
+
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.sefa.newsapp.domain.model.NewsUIModel
+import com.sefa.newsapp.domain.usecase.DeleteNewsUseCase
+import com.sefa.newsapp.domain.usecase.GetIsNewsExistInDbUseCase
+import com.sefa.newsapp.domain.usecase.InsertNewsUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+
+
+@HiltViewModel
+class DetailsViewModel
+@Inject constructor(
+    private val getIsNewsExistInDbUseCase: GetIsNewsExistInDbUseCase,
+    private val insertNewsUseCase: InsertNewsUseCase,
+    private val deleteNewsUseCase: DeleteNewsUseCase
+) : ViewModel()
+{
+    private val _state = mutableStateOf(FavState())
+    val state: State<FavState> = _state
+
+    fun checkIfNewsExists(newsId: Long)
+    {
+        viewModelScope.launch {
+            getIsNewsExistInDbUseCase.invoke(newsId)
+                .distinctUntilChanged()
+                .collect{ exist->
+                    _state.value = FavState(isFav = exist)
+                }
+        }
+    }
+
+    fun toggleFavorite(newsUIModel: NewsUIModel)
+    {
+        viewModelScope.launch {
+            val isFav = state.value.isFav
+
+            if (isFav)
+                deleteNewsUseCase.invoke(newsUIModel.id ?: 1)
+             else
+                insertNewsUseCase.invoke(newsUIModel)
+
+
+            _state.value = _state.value.copy(isFav = !isFav)
+        }
+    }
+}

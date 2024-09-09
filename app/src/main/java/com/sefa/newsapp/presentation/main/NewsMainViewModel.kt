@@ -1,6 +1,8 @@
 package com.sefa.newsapp.presentation.main
 
+import android.content.Context
 import android.util.Log
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.sefa.newsapp.domain.usecase.GetNewsListUseCase
@@ -9,16 +11,17 @@ import javax.inject.Inject
 import androidx.compose.runtime.State
 import androidx.lifecycle.viewModelScope
 import com.sefa.newsapp.utils.Resource
+import com.sefa.newsapp.utils.isNetworkAvailable
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 
 @HiltViewModel
 class NewsMainViewModel
 @Inject constructor(
-    private val getNewsListUseCase: GetNewsListUseCase
+    private val getNewsListUseCase: GetNewsListUseCase,
+    @ApplicationContext private val context: Context
 ) : ViewModel()
 {
     private val _state = mutableStateOf(NewsListState())
@@ -29,27 +32,40 @@ class NewsMainViewModel
     }
     fun getNewsList()
     {
-        viewModelScope.launch {
-            getNewsListUseCase.invoke()
-                .distinctUntilChanged()
-                .collect { resource->
+        if(context.isNetworkAvailable())
+        {
+            viewModelScope.launch {
+                getNewsListUseCase.invoke()
+                    .distinctUntilChanged()
+                    .collect { resource ->
 
-                    Log.e("TAG", resource.data?.size.toString())
+                        Log.e("TAG", resource.data?.size.toString())
 
-                    when (resource) {
-                        is Resource.Success -> {
-                            _state.value = NewsListState(movieList = resource.data ?: emptyList())
-                        }
+                        when (resource) {
+                            is Resource.Success -> {
+                                _state.value =
+                                    NewsListState(newsList = resource.data ?: emptyList())
+                            }
 
-                        is Resource.Loading -> {
-                            _state.value = NewsListState(isLoading = true)
-                        }
+                            is Resource.Loading -> {
+                                _state.value = NewsListState(isLoading = true)
+                            }
 
-                        is Resource.Error -> {
-                            _state.value = NewsListState(error = resource.message ?: "An error occurred")
+                            is Resource.Error -> {
+                                _state.value =
+                                    NewsListState(error = resource.message ?: "An error occurred")
+                            }
                         }
                     }
-                }
+            }
         }
+        else
+        {
+            _state.value = _state.value.copy(error = "No internet connection")
+        }
+    }
+
+    fun clearError() {
+        _state.value = _state.value.copy(error = "")
     }
 }

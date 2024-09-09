@@ -1,7 +1,8 @@
-package com.sefa.newsapp.presentation.signup
+package com.sefa.newsapp.presentation.auth.signup
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,12 +10,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,16 +32,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.util.PatternsCompat
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.sefa.newsapp.R
-import com.sefa.newsapp.presentation.theme.NewsComposeAppTheme
+import com.sefa.newsapp.presentation.auth.AuthViewModel
+import com.sefa.newsapp.presentation.auth.login.isValidEmail
+import com.sefa.newsapp.presentation.components.Snackbar
+import com.sefa.newsapp.utils.isNetworkAvailable
 
 @Composable
-fun SignUpScreen(navController: NavController) {
+fun SignUpScreen(navController: NavController, authViewModel: AuthViewModel = hiltViewModel())
+{
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordAgain by remember { mutableStateOf("") }
@@ -46,8 +53,42 @@ fun SignUpScreen(navController: NavController) {
     var emailError by remember { mutableStateOf(false) }
     var passwordError by remember { mutableStateOf(false) }
     var passwordAgainError by remember { mutableStateOf(false) }
+    val snackbarHostState = remember { SnackbarHostState() }
+    var showSnackbar by remember { mutableStateOf(false) }
+    var snackbarMessage by remember { mutableStateOf("") }
+
+    val authState by authViewModel.state
 
     val context = LocalContext.current
+
+    LaunchedEffect(authState.error) {
+        if (authState.error != null) {
+            snackbarHostState.showSnackbar(authState.error ?: "Oops, an error occured!")
+            authViewModel.clearError()
+        }
+    }
+
+    LaunchedEffect(showSnackbar) {
+        if (showSnackbar) {
+            snackbarHostState.showSnackbar(snackbarMessage)
+            showSnackbar = false
+        }
+    }
+
+    if (authState.isLoading)
+    {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            CircularProgressIndicator()
+        }
+    }
+    else if (authState.isLoggedIn)
+    {
+        LaunchedEffect(Unit) {
+            navController.navigate("main") {
+                popUpTo("signup") { inclusive = true }
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -57,10 +98,8 @@ fun SignUpScreen(navController: NavController) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        // İçeriği ortalamak için Spacer
         Spacer(modifier = Modifier.weight(1f))
 
-        // Title
         Text(
             text = "Sign Up",
             fontSize = 30.sp,
@@ -69,12 +108,11 @@ fun SignUpScreen(navController: NavController) {
             style = MaterialTheme.typography.displayMedium
         )
 
-        // Email TextField
         OutlinedTextField(
             value = email,
             onValueChange = {
                 email = it
-                emailError = !com.sefa.newsapp.presentation.login.isValidEmail(email)
+                emailError = !isValidEmail(email)
             },
             label = { Text(text ="Email", style = MaterialTheme.typography.labelLarge) },
             isError = emailError,
@@ -96,7 +134,6 @@ fun SignUpScreen(navController: NavController) {
             )
         }
 
-        // Password TextField with visibility toggle
         OutlinedTextField(
             value = password,
             onValueChange = {
@@ -171,33 +208,39 @@ fun SignUpScreen(navController: NavController) {
             )
         }
 
-        // Login Button
         Button(
             onClick = {
-                if (!com.sefa.newsapp.presentation.login.isValidEmail(email)) {
-                    Toast.makeText(context, "Enter a valid email.", Toast.LENGTH_SHORT).show()
+                if (!context.isNetworkAvailable()) {
+                    snackbarMessage = "No internet connection. Please check your connection."
+                    showSnackbar = true
+                }
+                else if (!isValidEmail(email))
+                {
+                    snackbarMessage = "Enter a valid email."
+                    showSnackbar = true
                 } else if (passwordError || passwordAgainError) {
-                    Toast.makeText(context, "Your password must be at least 8 characters.", Toast.LENGTH_SHORT).show()
-                }else if (!password.equals(passwordAgain)) {
-                    Toast.makeText(context, "Your passwords are not the same!", Toast.LENGTH_SHORT).show()
+                    snackbarMessage = "Your password must be at least 8 characters."
+                    showSnackbar = true
+                }
+                else if (!password.equals(passwordAgain)) {
+                    snackbarMessage = "Your passwords are not the same!"
+                    showSnackbar = true
                 }
                 else {
-                    // Login Logic
-                    navController.navigate("main")
+                    if (password == passwordAgain)
+                        authViewModel.signup(email, password)
                 }
             },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 16.dp)
-        ) {
+        )
+        {
             Text(text = "Save And Log In", style = MaterialTheme.typography.headlineSmall)
         }
 
-        // Spacer eklendi
-        Spacer(modifier = Modifier.weight(1f)) // Geri kalan boş alanı doldurur ve alttaki metni en alta iter
+        Spacer(modifier = Modifier.weight(1f))
 
-
-        // NYTNews
         Text(
             text = "NYTNews",
             fontSize = 18.sp,
@@ -206,4 +249,6 @@ fun SignUpScreen(navController: NavController) {
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
     }
+
+    Snackbar(snackbarHostState = snackbarHostState)
 }

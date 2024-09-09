@@ -2,17 +2,30 @@ package com.sefa.newsapp.di
 
 import android.app.Application
 import android.content.Context
+import android.net.ConnectivityManager
+import androidx.datastore.core.DataStore
+import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
+import androidx.datastore.preferences.core.PreferenceDataStoreFactory
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.emptyPreferences
+import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.room.Room
-import com.sefa.newsapp.data.datasources.local.NewsDAO
-import com.sefa.newsapp.data.datasources.local.NewsDatabase
-import com.sefa.newsapp.data.datasources.local.datasource.LocalDataSource
+import com.google.firebase.auth.FirebaseAuth
+import com.sefa.newsapp.data.datasources.local.room.NewsDAO
+import com.sefa.newsapp.data.datasources.local.room.NewsDatabase
+import com.sefa.newsapp.data.datasources.local.room.datasource.LocalDataSource
 import com.sefa.newsapp.data.datasources.remote.datasource.RemoteDataSource
 import com.sefa.newsapp.data.datasources.remote.service.NewsService
 import com.sefa.newsapp.utils.Constants
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -34,10 +47,11 @@ object DataModule
     }
 
     @Provides
-    fun provideOkHttpClient(loggingInterceptor: HttpLoggingInterceptor): OkHttpClient
+    fun provideOkHttpClient(loggingInterceptor: HttpLoggingInterceptor, context: Context): OkHttpClient
     {
         return OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
+            .cache(Cache(context.cacheDir, 10 * 1024 * 1024)) // 10 MB cache
             .build()
     }
 
@@ -64,7 +78,7 @@ object DataModule
     @Provides
     @Singleton
     fun provideCountryDao(database: NewsDatabase): NewsDAO =
-        database.movieDao()
+        database.newsDao()
 
     @Provides
     @Singleton
@@ -82,5 +96,32 @@ object DataModule
     fun provideLocalDataSource(dao: NewsDAO): LocalDataSource
             = LocalDataSource(dao)
 
+    @Singleton
+    @Provides
+    fun provideDataStore(@ApplicationContext context: Context): DataStore<Preferences> {
+        return PreferenceDataStoreFactory.create(
+            corruptionHandler = ReplaceFileCorruptionHandler(
+                produceNewData = { emptyPreferences() }
+            ),
+            scope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
+            produceFile = {context.preferencesDataStoreFile("user_preferences") }
+        )
+    }
 
+    @Module
+    @InstallIn(SingletonComponent::class)
+    object FirebaseModule {
+
+        @Provides
+        @Singleton
+        fun provideFirebaseAuth(): FirebaseAuth {
+            return FirebaseAuth.getInstance()
+        }
+    }
+
+    @Provides
+    @Singleton
+    fun provideConnectivityManager(context: Context): ConnectivityManager {
+        return context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    }
 }

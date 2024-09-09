@@ -1,10 +1,8 @@
 package com.sefa.newsapp.data.repository
 
 import android.util.Log
-import com.sefa.newsapp.data.datasources.local.NewsDAO
-import com.sefa.newsapp.data.datasources.local.datasource.LocalDataSource
+import com.sefa.newsapp.data.datasources.local.room.datasource.LocalDataSource
 import com.sefa.newsapp.data.datasources.remote.datasource.RemoteDataSource
-import com.sefa.newsapp.data.datasources.remote.service.NewsService
 import com.sefa.newsapp.data.mapper.asNewsUIModel
 import com.sefa.newsapp.domain.model.NewsUIModel
 import com.sefa.newsapp.domain.repository.NewsRepository
@@ -14,7 +12,8 @@ import javax.inject.Inject
 
 class NewsRepositoryImpl
 @Inject constructor(private val remoteDataSource: RemoteDataSource,
-                    private val localDataSource: LocalDataSource)
+                    private val localDataSource: LocalDataSource
+)
     :NewsRepository
 {
     override suspend fun getNewsFromApi(): Flow<List<NewsUIModel>> {

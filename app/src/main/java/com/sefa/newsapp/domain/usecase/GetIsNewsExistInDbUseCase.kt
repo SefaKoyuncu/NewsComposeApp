@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
-class GetIsMovieExistInDbUseCase @Inject constructor(private val repo: NewsRepository)
+class GetIsNewsExistInDbUseCase @Inject constructor(private val repo: NewsRepository)
 {
     suspend fun invoke(newsId: Long) : Flow<Boolean>
             = repo.isNewsExist(newsId)
