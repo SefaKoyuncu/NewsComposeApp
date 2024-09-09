@@ -16,7 +16,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Card
@@ -26,10 +25,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -39,6 +35,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.sefa.newsapp.R
@@ -46,10 +43,15 @@ import com.sefa.newsapp.domain.model.NewsUIModel
 import com.sefa.newsapp.utils.toFormattedDate
 
 @Composable
-fun NewsDetailsScreen(news: NewsUIModel?, navController: NavController)
+fun NewsDetailsScreen(news: NewsUIModel?, navController: NavController, viewModel: DetailsViewModel = hiltViewModel())
 {
     news ?: return
-    var isFavorite by remember { mutableStateOf(false) } // Favori durumu için
+
+    val state = viewModel.state.value
+
+    LaunchedEffect(Unit) {
+        viewModel.checkIfNewsExists(news.id ?: 1)
+    }
 
     Column(
         modifier = Modifier
@@ -69,11 +71,10 @@ fun NewsDetailsScreen(news: NewsUIModel?, navController: NavController)
                 modifier = Modifier
                     .fillMaxSize(),
                 contentScale = ContentScale.Crop,
-                placeholder = painterResource(id = R.drawable.news_image), // Varsayılan resim
-                error = painterResource(id = R.drawable.error_image) // Hata resmi
+                placeholder = painterResource(id = R.drawable.news_image),
+                error = painterResource(id = R.drawable.error_image)
             )
 
-            // Üst kısımda geri butonu ve başlık
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -85,21 +86,23 @@ fun NewsDetailsScreen(news: NewsUIModel?, navController: NavController)
                             Brush.verticalGradient(
                                 colors = listOf(Color.Transparent, Color.Black),
                                 startY = 110f,
-                                endY = 0f // Gradient'in uzunluğunu ayarlayabilirsiniz
+                                endY = 0f
                             )
                         )
                         .padding(8.dp)
                 ){
-                    // Geri butonu ve başlık
                     Row(
                         modifier = Modifier
                             .fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        IconButton(onClick = { navController.popBackStack() }) {
+                        IconButton(onClick = {
+                            navController.popBackStack()
+                        })
+                        {
                             Icon(
-                                imageVector = Icons.Default.ArrowBack,
+                                painterResource(id = R.drawable.arrow_back),
                                 contentDescription = "Back",
                                 tint = Color.White
                             )
@@ -107,7 +110,7 @@ fun NewsDetailsScreen(news: NewsUIModel?, navController: NavController)
                     }
                 }
 
-                Spacer(modifier = Modifier.weight(1f)) // Bu, metni alt ortalamak için gerekli alanı oluşturur
+                Spacer(modifier = Modifier.weight(1f))
 
                 Box(
                     modifier = Modifier
@@ -116,12 +119,11 @@ fun NewsDetailsScreen(news: NewsUIModel?, navController: NavController)
                             Brush.verticalGradient(
                                 colors = listOf(Color.Transparent, Color.Black),
                                 startY = 0f,
-                                endY = 110f // Gradient'in uzunluğunu ayarlayabilirsiniz
+                                endY = 110f
                             )
                         )
                         .padding(8.dp)
                 ) {
-                    // Alt kısımda metin
                     Text(
                         text = news.title ?: "No Title",
                         style = MaterialTheme.typography.labelLarge,
@@ -136,15 +138,13 @@ fun NewsDetailsScreen(news: NewsUIModel?, navController: NavController)
             }
         }
 
-        // Yazar Bilgisi ve İçerik
         Column(
             modifier = Modifier.padding(12.dp))
         {
             Row(
-                modifier = Modifier.fillMaxWidth(), // Row tüm genişliği kaplayacak
+                modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Card en solda, sabit genişlikte olacak
                 Card(
                     colors = CardDefaults.cardColors(containerColor = Color.Black),
                 ) {
@@ -167,13 +167,15 @@ fun NewsDetailsScreen(news: NewsUIModel?, navController: NavController)
                     modifier = Modifier.weight(1f)
                 ) {}
 
-                // IconButton en sağda
+
                 IconButton(
-                    onClick = { isFavorite = !isFavorite },
-                    modifier = Modifier.align(Alignment.CenterVertically) // IconButton ortada hizalanmış olacak
+                    onClick = {
+                        viewModel.toggleFavorite(news)
+                    },
+                    modifier = Modifier.align(Alignment.CenterVertically)
                 ) {
                     Icon(
-                        imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                        imageVector = if (state.isFav) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                         contentDescription = "Favorite",
                         tint = Color.Black,
                         modifier = Modifier
@@ -181,8 +183,6 @@ fun NewsDetailsScreen(news: NewsUIModel?, navController: NavController)
                     )
                 }
             }
-
-            // Icon ve Text'i yanyana sola hizala
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
