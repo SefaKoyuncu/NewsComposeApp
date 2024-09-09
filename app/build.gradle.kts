@@ -118,4 +118,7 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
 
     implementation(libs.kotlinx.serialization.json)
+
+    implementation(libs.compose.foundation)
+    implementation(libs.compose.foundation.layout)
 }
