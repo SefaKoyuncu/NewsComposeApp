@@ -1,7 +1,6 @@
 package com.sefa.newsapp.domain.usecase
 
 import android.util.Log
-import androidx.annotation.ReturnThis
 import com.sefa.newsapp.domain.model.NewsUIModel
 import com.sefa.newsapp.domain.repository.NewsRepository
 import com.sefa.newsapp.utils.Resource

@@ -1,6 +1,6 @@
 package com.sefa.newsapp.di
 
-import com.sefa.newsapp.data.datasources.local.datasource.LocalDataSource
+import com.sefa.newsapp.data.datasources.local.room.datasource.LocalDataSource
 import com.sefa.newsapp.data.datasources.remote.datasource.RemoteDataSource
 import com.sefa.newsapp.data.repository.NewsRepositoryImpl
 import com.sefa.newsapp.domain.repository.NewsRepository

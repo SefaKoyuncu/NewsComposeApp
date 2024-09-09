@@ -1,4 +1,4 @@
-package com.sefa.newsapp.data.datasources.local
+package com.sefa.newsapp.data.datasources.local.room
 
 import androidx.room.Dao
 import androidx.room.Insert

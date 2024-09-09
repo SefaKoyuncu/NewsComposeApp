@@ -1,12 +1,11 @@
 package com.sefa.newsapp.utils
 
 import android.os.Build
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
-import java.util.Date
-import java.text.ParseException
 
 fun String.toFormattedDate(): String? {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -15,7 +14,6 @@ fun String.toFormattedDate(): String? {
             val date = LocalDate.parse(this, formatter)
             date.format(DateTimeFormatter.ofPattern("MMM d, yyyy", Locale.ENGLISH))
         } catch (e: Exception) {
-            // Handle parsing or formatting exceptions
             "Invalid date"
         }
     } else {
@@ -25,7 +23,6 @@ fun String.toFormattedDate(): String? {
             val date = inputFormat.parse(this)
             date?.let { outputFormat.format(it) }
         } catch (e: ParseException) {
-            // Handle parsing exceptions
             "Invalid date"
         }
     }

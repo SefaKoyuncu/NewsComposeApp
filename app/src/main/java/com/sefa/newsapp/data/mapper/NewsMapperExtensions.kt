@@ -13,6 +13,6 @@ fun News.asNewsUIModel() = NewsUIModel(
     byline = byline,
     title = title,
     abstract = abstract,
-    imageUrl = media.firstOrNull()?.mediaMetadata?.getOrNull(2)?.url ?: NO_IMAGE // Güvenli erişim
+    imageUrl = media.firstOrNull()?.mediaMetadata?.getOrNull(2)?.url ?: NO_IMAGE
 )
 

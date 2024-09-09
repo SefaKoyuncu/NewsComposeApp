@@ -1,6 +1,6 @@
-package com.sefa.newsapp.data.datasources.local.datasource
+package com.sefa.newsapp.data.datasources.local.room.datasource
 
-import com.sefa.newsapp.data.datasources.local.NewsDAO
+import com.sefa.newsapp.data.datasources.local.room.NewsDAO
 import com.sefa.newsapp.domain.model.NewsUIModel
 import javax.inject.Inject
 
