@@ -39,6 +39,7 @@ import androidx.navigation.NavController
 import com.sefa.newsapp.R
 import com.sefa.newsapp.presentation.auth.AuthViewModel
 import com.sefa.newsapp.presentation.auth.login.isValidEmail
+import com.sefa.newsapp.presentation.components.BackButton
 import com.sefa.newsapp.presentation.components.Snackbar
 import com.sefa.newsapp.utils.isNetworkAvailable
 
@@ -90,164 +91,175 @@ fun SignUpScreen(navController: NavController, authViewModel: AuthViewModel = hi
         }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-
-        Spacer(modifier = Modifier.weight(1f))
-
-        Text(
-            text = "Sign Up",
-            fontSize = 30.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 32.dp),
-            style = MaterialTheme.typography.displayMedium
-        )
-
-        OutlinedTextField(
-            value = email,
-            onValueChange = {
-                email = it
-                emailError = !isValidEmail(email)
-            },
-            label = { Text(text ="Email", style = MaterialTheme.typography.labelLarge) },
-            isError = emailError,
+    Box(modifier = Modifier.fillMaxSize()) {
+        BackButton(
+            navController = navController,
+            color = Color.Black,
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = if (emailError) 0.dp else 16.dp),
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
+                .align(Alignment.TopStart)
+                .padding(16.dp)
         )
 
-        if (emailError) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+
+            Spacer(modifier = Modifier.weight(1f))
+
             Text(
-                text = "Enter a valid email.",
-                color = Color.Red,
+                text = "Sign Up",
+                fontSize = 30.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(bottom = 32.dp),
+                style = MaterialTheme.typography.displayMedium
+            )
+
+            OutlinedTextField(
+                value = email,
+                onValueChange = {
+                    email = it
+                    emailError = !isValidEmail(email)
+                },
+                label = { Text(text = "Email", style = MaterialTheme.typography.labelLarge) },
+                isError = emailError,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 16.dp),
-                style = MaterialTheme.typography.labelLarge
+                    .padding(bottom = if (emailError) 0.dp else 16.dp),
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
             )
-        }
 
-        OutlinedTextField(
-            value = password,
-            onValueChange = {
-                password = it
-                passwordError = password.length < 8
-            },
-            label = { Text(text ="Password", style = MaterialTheme.typography.labelLarge) },
-            isError = passwordError,
-            singleLine = true,
-            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-            trailingIcon = {
-                val icon = if (passwordVisible)
-                    painterResource(id = R.drawable.visibility_24px)
-                else
-                    painterResource(id = R.drawable.visibility_off_24px)
+            if (emailError) {
+                Text(
+                    text = "Enter a valid email.",
+                    color = Color.Red,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp),
+                    style = MaterialTheme.typography.labelLarge
+                )
+            }
 
-                IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                    Icon(painter = icon, contentDescription = null)
-                }
-            },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = if (passwordError) 0.dp else 16.dp),
-        )
+            OutlinedTextField(
+                value = password,
+                onValueChange = {
+                    password = it
+                    passwordError = password.length < 8
+                },
+                label = { Text(text = "Password", style = MaterialTheme.typography.labelLarge) },
+                isError = passwordError,
+                singleLine = true,
+                visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                trailingIcon = {
+                    val icon = if (passwordVisible)
+                        painterResource(id = R.drawable.visibility_24px)
+                    else
+                        painterResource(id = R.drawable.visibility_off_24px)
 
-        if (passwordError) {
-            Text(
-                text = "Your password must be at least 8 characters.",
-                color = Color.Red,
+                    IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                        Icon(painter = icon, contentDescription = null)
+                    }
+                },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 16.dp),
-                style = MaterialTheme.typography.labelLarge
+                    .padding(bottom = if (passwordError) 0.dp else 16.dp),
             )
-        }
 
-        OutlinedTextField(
-            value = passwordAgain,
-            onValueChange = {
-                passwordAgain = it
-                passwordAgainError = passwordAgain.length < 8
-            },
-            label = { Text(text ="Password Again", style = MaterialTheme.typography.labelLarge) },
-            isError = passwordAgainError,
-            singleLine = true,
-            visualTransformation = if (passwordAgainVisible) VisualTransformation.None else PasswordVisualTransformation(),
-            trailingIcon = {
-                val icon = if (passwordAgainVisible)
-                    painterResource(id = R.drawable.visibility_24px)
-                else
-                    painterResource(id = R.drawable.visibility_off_24px)
+            if (passwordError) {
+                Text(
+                    text = "Your password must be at least 8 characters.",
+                    color = Color.Red,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp),
+                    style = MaterialTheme.typography.labelLarge
+                )
+            }
 
-                IconButton(onClick = { passwordAgainVisible = !passwordAgainVisible }) {
-                    Icon(painter = icon, contentDescription = null)
-                }
-            },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = if (passwordAgainError) 0.dp else 16.dp),
-        )
+            OutlinedTextField(
+                value = passwordAgain,
+                onValueChange = {
+                    passwordAgain = it
+                    passwordAgainError = passwordAgain.length < 8
+                },
+                label = {
+                    Text(
+                        text = "Password Again",
+                        style = MaterialTheme.typography.labelLarge
+                    )
+                },
+                isError = passwordAgainError,
+                singleLine = true,
+                visualTransformation = if (passwordAgainVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                trailingIcon = {
+                    val icon = if (passwordAgainVisible)
+                        painterResource(id = R.drawable.visibility_24px)
+                    else
+                        painterResource(id = R.drawable.visibility_off_24px)
 
-        if (passwordAgainError) {
-            Text(
-                text = "Your password must be at least 8 characters.",
-                color = Color.Red,
+                    IconButton(onClick = { passwordAgainVisible = !passwordAgainVisible }) {
+                        Icon(painter = icon, contentDescription = null)
+                    }
+                },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 16.dp),
-                style = MaterialTheme.typography.labelLarge
+                    .padding(bottom = if (passwordAgainError) 0.dp else 16.dp),
+            )
+
+            if (passwordAgainError) {
+                Text(
+                    text = "Your password must be at least 8 characters.",
+                    color = Color.Red,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp),
+                    style = MaterialTheme.typography.labelLarge
+                )
+            }
+
+            Button(
+                onClick = {
+                    if (!context.isNetworkAvailable()) {
+                        snackbarMessage = "No internet connection. Please check your connection."
+                        showSnackbar = true
+                    } else if (!isValidEmail(email)) {
+                        snackbarMessage = "Enter a valid email."
+                        showSnackbar = true
+                    } else if (passwordError || passwordAgainError) {
+                        snackbarMessage = "Your password must be at least 8 characters."
+                        showSnackbar = true
+                    } else if (!password.equals(passwordAgain)) {
+                        snackbarMessage = "Your passwords are not the same!"
+                        showSnackbar = true
+                    } else {
+                        if (password == passwordAgain)
+                            authViewModel.signup(email, password)
+                    }
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp)
+            )
+            {
+                Text(text = "Save And Log In", style = MaterialTheme.typography.headlineSmall)
+            }
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            Text(
+                text = "NYTNews",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.ExtraBold,
+                style = MaterialTheme.typography.displayMedium,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
             )
         }
-
-        Button(
-            onClick = {
-                if (!context.isNetworkAvailable()) {
-                    snackbarMessage = "No internet connection. Please check your connection."
-                    showSnackbar = true
-                }
-                else if (!isValidEmail(email))
-                {
-                    snackbarMessage = "Enter a valid email."
-                    showSnackbar = true
-                } else if (passwordError || passwordAgainError) {
-                    snackbarMessage = "Your password must be at least 8 characters."
-                    showSnackbar = true
-                }
-                else if (!password.equals(passwordAgain)) {
-                    snackbarMessage = "Your passwords are not the same!"
-                    showSnackbar = true
-                }
-                else {
-                    if (password == passwordAgain)
-                        authViewModel.signup(email, password)
-                }
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 16.dp)
-        )
-        {
-            Text(text = "Save And Log In", style = MaterialTheme.typography.headlineSmall)
-        }
-
-        Spacer(modifier = Modifier.weight(1f))
-
-        Text(
-            text = "NYTNews",
-            fontSize = 18.sp,
-            fontWeight = FontWeight.ExtraBold,
-            style = MaterialTheme.typography.displayMedium,
-            modifier = Modifier.align(Alignment.CenterHorizontally)
-        )
     }
 
     Snackbar(snackbarHostState = snackbarHostState)

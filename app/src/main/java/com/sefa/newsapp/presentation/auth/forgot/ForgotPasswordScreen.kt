@@ -2,6 +2,7 @@ package com.sefa.newsapp.presentation.auth.forgot
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -31,6 +32,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.sefa.newsapp.presentation.auth.AuthViewModel
 import com.sefa.newsapp.presentation.auth.login.isValidEmail
+import com.sefa.newsapp.presentation.components.BackButton
 import com.sefa.newsapp.presentation.components.Snackbar
 import com.sefa.newsapp.utils.isNetworkAvailable
 
@@ -62,88 +64,96 @@ fun ForgotPasswordScreen(navController: NavController, authViewModel: AuthViewMo
         }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Spacer(modifier = Modifier.weight(1f))
-
-        Text(
-            text = "Forgot Password",
-            fontSize = 30.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 32.dp),
-            style = MaterialTheme.typography.displayMedium
-        )
-
-        OutlinedTextField(
-            value = email,
-            onValueChange = {
-                email = it
-                emailError = !isValidEmail(email)
-            },
-            label = {
-                Text(
-                    text ="Email",
-                    style = MaterialTheme.typography.labelLarge
-                )},
-            isError = emailError,
+    Box(modifier = Modifier.fillMaxSize()) {
+        BackButton(
+            navController = navController,
+            color = Color.Black,
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = if (emailError) 0.dp else 16.dp),
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
+                .align(Alignment.TopStart)
+                .padding(16.dp)
         )
 
-        if (emailError)
-        {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+
+            Spacer(modifier = Modifier.weight(1f))
+
             Text(
-                text = "Enter a valid email.",
-                color = Color.Red,
+                text = "Forgot Password",
+                fontSize = 30.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(bottom = 32.dp),
+                style = MaterialTheme.typography.displayMedium
+            )
+
+            OutlinedTextField(
+                value = email,
+                onValueChange = {
+                    email = it
+                    emailError = !isValidEmail(email)
+                },
+                label = {
+                    Text(
+                        text = "Email",
+                        style = MaterialTheme.typography.labelLarge
+                    )
+                },
+                isError = emailError,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 16.dp),
-                style = MaterialTheme.typography.labelLarge
+                    .padding(bottom = if (emailError) 0.dp else 16.dp),
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
+            )
+
+            if (emailError) {
+                Text(
+                    text = "Enter a valid email.",
+                    color = Color.Red,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp),
+                    style = MaterialTheme.typography.labelLarge
+                )
+            }
+
+            Button(
+                onClick = {
+                    if (!context.isNetworkAvailable()) {
+                        snackbarMessage = "No internet connection. Please check your connection."
+                        showSnackbar = true
+                    } else if (!isValidEmail(email)) {
+                        snackbarMessage = "Enter a valid email."
+                        showSnackbar = true
+                    } else {
+                        authViewModel.sendPasswordResetEmail(email)
+                    }
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp)
+            ) {
+                Text(
+                    text = "Reset Password",
+                    style = MaterialTheme.typography.headlineSmall
+                )
+            }
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            Text(
+                text = "NYTNews",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.ExtraBold,
+                style = MaterialTheme.typography.displayMedium,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
             )
         }
-
-        Button(
-            onClick = {
-                if (!context.isNetworkAvailable())
-                {
-                    snackbarMessage = "No internet connection. Please check your connection."
-                    showSnackbar = true
-                }
-                else if (!isValidEmail(email))
-                {
-                    snackbarMessage = "Enter a valid email."
-                    showSnackbar = true
-                }
-                else
-                {
-                    authViewModel.sendPasswordResetEmail(email)
-                }            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 16.dp)
-        ) {
-            Text(text = "Reset Password",
-                style = MaterialTheme.typography.headlineSmall
-            )
-        }
-
-        Spacer(modifier = Modifier.weight(1f))
-
-        Text(
-            text = "NYTNews",
-            fontSize = 18.sp,
-            fontWeight = FontWeight.ExtraBold,
-            style = MaterialTheme.typography.displayMedium,
-            modifier = Modifier.align(Alignment.CenterHorizontally)
-        )
     }
 
     Snackbar(snackbarHostState = snackbarHostState)

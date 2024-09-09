@@ -40,6 +40,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.sefa.newsapp.R
 import com.sefa.newsapp.domain.model.NewsUIModel
+import com.sefa.newsapp.presentation.components.BackButton
 import com.sefa.newsapp.utils.toFormattedDate
 
 @Composable
@@ -97,16 +98,8 @@ fun NewsDetailsScreen(news: NewsUIModel?, navController: NavController, viewMode
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        IconButton(onClick = {
-                            navController.popBackStack()
-                        })
-                        {
-                            Icon(
-                                painterResource(id = R.drawable.arrow_back),
-                                contentDescription = "Back",
-                                tint = Color.White
-                            )
-                        }
+
+                        BackButton(navController = navController, color = Color.White, modifier = Modifier)
                     }
                 }
 
