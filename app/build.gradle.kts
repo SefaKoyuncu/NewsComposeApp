@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.safeargs)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.firebase.crashlytics)
 }
 
 android {
@@ -65,6 +66,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.firebase.crashlytics)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -72,7 +74,6 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-
     implementation(libs.kotlin.stdlib)
 
     // Compose
@@ -88,9 +89,6 @@ dependencies {
     // Lifecycle
     implementation(libs.lifecycle.runtime)
     implementation(libs.lifecycle.viewmodel.compose)
-
-    // Firebase Authentication
-    implementation(libs.firebase.auth)
 
     // Retrofit & OkHttp
     implementation(libs.retrofit)
@@ -108,17 +106,28 @@ dependencies {
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
 
-
     // Coil
     implementation(libs.coil.compose)
 
     // DataStore
     implementation(libs.datastore.preferences)
 
+    // Compose Navigation
     implementation(libs.androidx.navigation.compose)
 
+    // Serialization
     implementation(libs.kotlinx.serialization.json)
 
+    // Compose Foundations
     implementation(libs.compose.foundation)
     implementation(libs.compose.foundation.layout)
+
+    // Firebase Authentication
+    implementation(libs.firebase.auth)
+
+    // Firebase Crashlytics
+    implementation(libs.firebase.crashlytics)
+
+    // LeakCanary
+    debugImplementation(libs.leakcanary)
 }
