@@ -12,7 +12,6 @@ import com.sefa.newsapp.utils.Resource
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 
-
 @HiltViewModel
 class FavViewModel
 @Inject constructor(
