@@ -8,8 +8,8 @@ import javax.inject.Inject
 
 class GetIsNewsExistInDbUseCase @Inject constructor(private val repo: NewsRepository)
 {
-    suspend fun invoke(newsId: Long) : Flow<Boolean>
-            = repo.isNewsExist(newsId)
+    suspend fun invoke(newsId: Long, userEmail: String) : Flow<Boolean>
+            = repo.isNewsExist(newsId,userEmail)
         .flowOn(Dispatchers.IO)
 }
 

@@ -13,12 +13,13 @@ data class NewsUIModel (
 
   var url           : String?           = null,
   @PrimaryKey //autoGenerate = true
-  var id            : Long?              = null,
+  var id            : Long?             = null,
   var publishedDate : String?           = null,
   var section       : String?           = null,
   var subsection    : String?           = null,
   var byline        : String?           = null,
   var title         : String?           = null,
   var abstract      : String?           = null,
-  var imageUrl      : String?           = null
+  var imageUrl      : String?           = null,
+  val userEmail     : String?           = null
 ) : Parcelable

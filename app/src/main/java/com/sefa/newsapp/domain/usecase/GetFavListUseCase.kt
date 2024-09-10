@@ -12,12 +12,12 @@ import javax.inject.Inject
 
 class GetFavListUseCase @Inject constructor(private val repo: NewsRepository)
 {
-    fun invoke(): Flow<Resource<List<NewsUIModel>>>
+    fun invoke(userEmail: String): Flow<Resource<List<NewsUIModel>>>
     {
         return flow {
             emit(Resource.Loading())
             try {
-                repo.getFavNews()
+                repo.getFavNews(userEmail)
                     .collect{list->
                         emit(Resource.Success(list))
                         Log.e("TAG",list.size.toString())

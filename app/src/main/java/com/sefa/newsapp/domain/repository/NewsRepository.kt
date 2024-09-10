@@ -9,9 +9,9 @@ interface NewsRepository
 
     suspend fun insertNews(news: NewsUIModel)
 
-    suspend fun deleteNews(newsId: Long)
+    suspend fun deleteNews(newsId: Long,userEmail: String)
 
-    suspend fun isNewsExist(newsId: Long) : Flow<Boolean>
+    suspend fun isNewsExist(newsId: Long, userEmail: String) : Flow<Boolean>
 
-    suspend fun getFavNews(): Flow<List<NewsUIModel>>
+    suspend fun getFavNews(userEmail: String): Flow<List<NewsUIModel>>
 }

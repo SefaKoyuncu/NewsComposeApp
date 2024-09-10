@@ -4,6 +4,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sefa.newsapp.data.datasources.local.datastore.UserPreferences
 import com.sefa.newsapp.domain.model.NewsUIModel
 import com.sefa.newsapp.domain.usecase.DeleteNewsUseCase
 import com.sefa.newsapp.domain.usecase.GetIsNewsExistInDbUseCase
@@ -19,7 +20,8 @@ class DetailsViewModel
 @Inject constructor(
     private val getIsNewsExistInDbUseCase: GetIsNewsExistInDbUseCase,
     private val insertNewsUseCase: InsertNewsUseCase,
-    private val deleteNewsUseCase: DeleteNewsUseCase
+    private val deleteNewsUseCase: DeleteNewsUseCase,
+    private val userPreferences: UserPreferences
 ) : ViewModel()
 {
     private val _state = mutableStateOf(FavState())
@@ -28,26 +30,35 @@ class DetailsViewModel
     fun checkIfNewsExists(newsId: Long)
     {
         viewModelScope.launch {
-            getIsNewsExistInDbUseCase.invoke(newsId)
-                .distinctUntilChanged()
-                .collect{ exist->
-                    _state.value = FavState(isFav = exist)
-                }
+            val userEmail = userPreferences.getUserEmail()
+            if (!userEmail.isNullOrEmpty())
+            {
+                getIsNewsExistInDbUseCase.invoke(newsId,userEmail)
+                    .distinctUntilChanged()
+                    .collect { exist ->
+                        _state.value = FavState(isFav = exist)
+                    }
+            }
         }
     }
 
     fun toggleFavorite(newsUIModel: NewsUIModel)
     {
         viewModelScope.launch {
-            val isFav = state.value.isFav
+            val userEmail = userPreferences.getUserEmail()
+            if (!userEmail.isNullOrEmpty()) {
 
-            if (isFav)
-                deleteNewsUseCase.invoke(newsUIModel.id ?: 1)
-             else
-                insertNewsUseCase.invoke(newsUIModel)
+              val news =  newsUIModel.copy(userEmail = userEmail)
 
+                val isFav = state.value.isFav
 
-            _state.value = _state.value.copy(isFav = !isFav)
+                if (isFav)
+                    deleteNewsUseCase.invoke(news.id ?: 1,userEmail)
+                else
+                    insertNewsUseCase.invoke(news)
+
+                _state.value = _state.value.copy(isFav = !isFav)
+            }
         }
     }
 }

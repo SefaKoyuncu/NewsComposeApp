@@ -40,6 +40,12 @@ class AuthViewModel @Inject constructor(
                         error = null
                     )
 
+                    userPreferences.clearAllPreferences()
+                    val storedEmail = userPreferences.getUserEmail()
+                    if (storedEmail != email) {
+                        userPreferences.setUserEmail(email)
+                    }
+
                     if (rememberMe) {
                         userPreferences.setRememberMe(true)
                     }
@@ -71,6 +77,8 @@ class AuthViewModel @Inject constructor(
                         isLoading = false,
                         error = null
                     )
+                    userPreferences.clearAllPreferences()
+                    userPreferences.setUserEmail(email)
                     userPreferences.setRememberMe(false)
                 } catch (e: Exception) {
                     _state.value = _state.value.copy(
@@ -93,6 +101,7 @@ class AuthViewModel @Inject constructor(
             viewModelScope.launch {
                 try {
                     auth.signOut()
+                    userPreferences.clearAllPreferences()
                     userPreferences.setRememberMe(false)
                     Log.e("AuthViewModel", "Logout successful")
                     _state.value = AuthState(isLoggedIn = false, isLoading = false, error = null)

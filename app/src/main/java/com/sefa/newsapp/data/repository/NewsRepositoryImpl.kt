@@ -40,18 +40,18 @@ class NewsRepositoryImpl
 
     override suspend fun insertNews(news: NewsUIModel) = localDataSource.insertNews(news)
 
-    override suspend fun deleteNews(newsId: Long) = localDataSource.deleteNews(newsId)
+    override suspend fun deleteNews(newsId: Long, userEmail: String) = localDataSource.deleteNews(newsId,userEmail)
 
-    override suspend fun isNewsExist(newsId: Long): Flow<Boolean> {
+    override suspend fun isNewsExist(newsId: Long, userEmail: String): Flow<Boolean> {
         return flow {
-           emit(localDataSource.isNewsExist(newsId))
+           emit(localDataSource.isNewsExist(newsId,userEmail))
         }
     }
 
-    override suspend fun getFavNews(): Flow<List<NewsUIModel>> {
+    override suspend fun getFavNews(userEmail: String): Flow<List<NewsUIModel>> {
 
         return  flow {
-            emit(localDataSource.getFavNews())
+            emit(localDataSource.getFavNews(userEmail))
         }
     }
 }
