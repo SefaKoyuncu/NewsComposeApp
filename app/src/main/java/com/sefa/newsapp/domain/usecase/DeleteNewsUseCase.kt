@@ -5,8 +5,8 @@ import javax.inject.Inject
 
 class DeleteNewsUseCase @Inject constructor(private val repo: NewsRepository)
 {
-    suspend fun invoke(newsId: Long)
+    suspend fun invoke(newsId: Long, userEmail: String)
     {
-        repo.deleteNews(newsId)
+        repo.deleteNews(newsId,userEmail)
     }
 }
