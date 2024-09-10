@@ -2,20 +2,18 @@ package com.sefa.newsapp.presentation.main
 
 import android.content.Context
 import android.util.Log
-import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.sefa.newsapp.domain.usecase.GetNewsListUseCase
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
-import androidx.compose.runtime.State
 import androidx.lifecycle.viewModelScope
+import com.sefa.newsapp.domain.usecase.GetNewsListUseCase
 import com.sefa.newsapp.utils.Resource
 import com.sefa.newsapp.utils.isNetworkAvailable
+import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
-
+import javax.inject.Inject
 
 @HiltViewModel
 class NewsMainViewModel
